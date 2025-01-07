@@ -1,6 +1,7 @@
 #ifndef _SMALLSTRING_SMALLSTRING_HPP_
 #define _SMALLSTRING_SMALLSTRING_HPP_
 
+#include <iostream>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -52,26 +53,41 @@ template <typename RawBufferType = std::vector<char>> class Buffer {
     void ensure_pad(const std::size_t pad) { ensure_fit(pad); }
 
     char* head() { return m_buffer.data(); }
-
     const char* head() const { return m_buffer.data(); }
 
     char* tail() { return m_buffer.data() + m_length; }
-
     const char* tail() const { return m_buffer.data() + m_length; }
+
+    char* begin() { return head(); }
+    const char* begin() const { return head(); }
+
+    char* end() { return tail(); }
+    const char* end() const { return tail(); }
 
     void clear() { m_length = 0; }
 
-    void append(const char* ptr, std::size_t sz) {
+    void push(const char* ptr, std::size_t sz) {
         ensure_fit(sz);
         std::copy(ptr, ptr + sz, tail());
         m_length += sz;
     }
 
-    void append(const std::string_view& view) {
-        append(view.data(), view.length());
+    template <std::size_t N> void push(const char (&ptr)[N]) { push(ptr, N); }
+
+    void push(const std::string_view& view) {
+        push(view.data(), view.length());
     }
 
-    void append(const std::string& str) { append(str.data(), str.length()); }
+    void push(const std::string& str) { push(str.data(), str.length()); }
+
+    void pop(const std::size_t n) {
+        if (n >= m_length) {
+            m_length = 0;
+            return;
+        }
+        std::copy(head() + n, tail(), head());
+        m_length = m_length - n;
+    }
 
     std::string_view view() {
         return std::string_view(m_buffer.data(), m_length);
@@ -80,6 +96,10 @@ template <typename RawBufferType = std::vector<char>> class Buffer {
     const std::string_view view() const {
         return std::string_view(m_buffer.data(), m_length);
     }
+
+    std::size_t find(const char* str) const { return view().find(str); }
+
+    std::size_t find(const std::string& str) const { return view().find(str); }
 };
 
 } // namespace smallstring

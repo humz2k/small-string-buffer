@@ -13,6 +13,6 @@ add_library(smallstring INTERFACE)
 target_include_directories(smallstring INTERFACE include)
 
 if (${PROJECT_IS_TOP_LEVEL})
-add_executable(test test.cpp)
-target_link_libraries(test PUBLIC smallstring)
+add_executable(example example.cpp)
+target_link_libraries(example PUBLIC smallstring)
 endif()
