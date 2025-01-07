@@ -72,7 +72,7 @@ template <typename RawBufferType = std::vector<char>> class Buffer {
         m_length += sz;
     }
 
-    template <std::size_t N> void push(const char (&ptr)[N]) { push(ptr, N); }
+    template <std::size_t N> void push(const char (&ptr)[N]) { push(ptr, N-1); }
 
     void push(const std::string_view& view) {
         push(view.data(), view.length());
