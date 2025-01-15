@@ -14,10 +14,10 @@ template <typename RawBufferType = std::vector<char>> class Buffer {
     std::size_t m_length = 0;
     RawBufferType m_buffer;
 
-    template<typename T>
-    int num_digits(T number){
+    template <typename T> int num_digits(T number) {
         int digits = 0;
-        if (number < 0) digits = 1;
+        if (number < 0)
+            digits = 1;
         while (number) {
             number /= 10;
             digits++;
@@ -93,7 +93,7 @@ template <typename RawBufferType = std::vector<char>> class Buffer {
 
     void push(const std::string& str) { push(str.data(), str.length()); }
 
-    void push(int number){
+    void push(int number) {
         const int ndigits = num_digits(number);
         ensure_fit(ndigits);
         m_length += ndigits;
@@ -101,14 +101,13 @@ template <typename RawBufferType = std::vector<char>> class Buffer {
         start--;
         const bool negative = number < 0;
         number = std::abs(number);
-        while (number){
+        while (number) {
             char digit = (number % 10) + '0';
             *start-- = digit;
             number /= 10;
         }
-        if (negative){
+        if (negative)
             *start = '-';
-        }
     }
 
     void pop(const std::size_t n) {
