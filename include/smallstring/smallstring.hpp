@@ -1,6 +1,7 @@
 #ifndef _SMALLSTRING_SMALLSTRING_HPP_
 #define _SMALLSTRING_SMALLSTRING_HPP_
 
+#include <cstdint>
 #include <iostream>
 #include <memory>
 #include <sstream>
@@ -87,9 +88,7 @@ template <typename RawBufferType = std::vector<char>> class Buffer {
         push(ptr, N - 1);
     }
 
-    void push(const std::string_view& view) {
-        push(view.data(), view.length());
-    }
+    void push(std::string_view view) { push(view.data(), view.length()); }
 
     void push(const std::string& str) { push(str.data(), str.length()); }
 
@@ -108,6 +107,36 @@ template <typename RawBufferType = std::vector<char>> class Buffer {
         }
         if (negative)
             *start = '-';
+    }
+
+    void push(int64_t number) {
+        const int ndigits = num_digits(number);
+        ensure_fit(ndigits);
+        m_length += ndigits;
+        char* start = tail();
+        start--;
+        const bool negative = number < 0;
+        number = std::abs(number);
+        while (number) {
+            char digit = (number % 10) + '0';
+            *start-- = digit;
+            number /= 10;
+        }
+        if (negative)
+            *start = '-';
+    }
+
+    void push(size_t number) {
+        const int ndigits = num_digits(number);
+        ensure_fit(ndigits);
+        m_length += ndigits;
+        char* start = tail();
+        start--;
+        while (number) {
+            char digit = (number % 10) + '0';
+            *start-- = digit;
+            number /= 10;
+        }
     }
 
     void pop(const std::size_t n) {
