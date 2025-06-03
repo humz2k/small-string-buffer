@@ -54,7 +54,9 @@ int main() {
         smallstr_average_time += smallstring_benchmark() / ((double)runs);
         stdstr_average_time += stdstring_benchmark() / ((double)runs);
     }
-    std::cout << "Results:\n" << "   - smallstr::Buffer = " << smallstr_average_time << "ns\n"
-              << "   - std::string      = " << stdstr_average_time << "ns" << std::endl;
+    std::cout << "Results:\n"
+              << "   - smallstr::Buffer = " << smallstr_average_time << "ns\n"
+              << "   - std::string      = " << stdstr_average_time << "ns"
+              << std::endl;
     return 0;
 }

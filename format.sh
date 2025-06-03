@@ -3,3 +3,4 @@
 clang-format -i include/smallstring/*.hpp
 clang-format -i example.cpp
 clang-format -i benchmark.cpp
+clang-format -i tests/*.cpp
